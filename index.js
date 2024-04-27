@@ -26,6 +26,7 @@ async function run() {
 
     const regCollection = client.db("UserDB").collection("Register");
     const addCollection = client.db("UserDB").collection("AddTour");
+    const tourspotCollection = client.db("UserDB").collection("TouristSpot");
 
     //register api
     app.get("/register", async (req, res) => {
@@ -52,6 +53,14 @@ async function run() {
       console.log(touradd);
       const result = await addCollection.insertOne(touradd);
       res.json(result);
+    });
+
+    // alltourists Api
+
+    app.get("/alltourists", async (req, res) => {
+      const coursor = tourspotCollection.find();
+      const touristSpot = await coursor.toArray();
+      res.send(touristSpot);
     });
 
     // Send a ping to confirm a successful connection
