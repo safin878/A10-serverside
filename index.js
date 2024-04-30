@@ -77,8 +77,44 @@ async function run() {
       res.send(result);
     });
 
+    app.delete("/mylist/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await addCollection.deleteOne(query);
+      res.json(result);
+    });
+
+    app.get("/mylistbyid/:id", async (req, res) => {
+      const id = req.params.id;
+      console.log(id);
+      const query = { _id: new ObjectId(id) };
+      const result = await addCollection.findOne(query);
+      res.send(result);
+    });
+
+    app.put("/mylistbyid/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = req.body;
+      const Doc = {
+        $set: {
+          ImgUrl: updateDoc.ImgUrl,
+          SpotName: updateDoc.SpotName,
+          Country: updateDoc.Country,
+          Location: updateDoc.Location,
+          ShortDescription: updateDoc.ShortDescription,
+          AvarageCost: updateDoc.AvarageCost,
+          Seasonality: updateDoc.Seasonality,
+          TravelTime: updateDoc.TravelTime,
+          TotaVisitorsPerYear: updateDoc.TotaVisitorsPerYear,
+        },
+      };
+      const result = await addCollection.updateOne(filter, Doc, options);
+      res.send(result);
+    });
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
