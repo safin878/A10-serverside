@@ -27,6 +27,7 @@ async function run() {
     const regCollection = client.db("UserDB").collection("Register");
     const addCollection = client.db("UserDB").collection("AddTour");
     const tourspotCollection = client.db("UserDB").collection("TouristSpot");
+    const countryCollection = client.db("UserDB").collection("CountryCard");
 
     //register api
     app.get("/register", async (req, res) => {
@@ -69,6 +70,14 @@ async function run() {
       res.send(touristSpot);
     });
 
+    //contrycard api
+    app.get("/country/:Country", async (req, res) => {
+      console.log(req.params.Country);
+      const result = await countryCollection
+        .find({ Country: req.params.Country })
+        .toArray();
+      res.send(result);
+    });
     //mylist api
     app.get("/mylist/:email", async (req, res) => {
       const result = await addCollection
